@@ -68,8 +68,8 @@ def final():
         print_pause("Fortificáis vuestras defensas y lográis proteger vuestros dominios de las amenazas.")
         print_pause("Vuestra historia termina con éxito, habéis alcanzado la cima del poder.")
     elif decision == '2':
-        print_pause("Intentáis expandir vuestro territorio, pero las amenazas os superan.")
-        print_pause("Vuestra historia termina en fracaso.")
+       print_pause("Intentáis expandir vuestro territorio, pero las hay demasiados enemigos, poco a poco vas perdiendo territorios.")
+        print_pause("Acabas perdiendolo todo y mueres de hambre.")
     else:
         print_pause("Buscáis alianzas con otras tribus y lográis fortalecer vuestra posición.")
         print_pause("Vuestra historia termina con éxito, habéis alcanzado la cima del poder.")
