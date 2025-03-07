@@ -2,7 +2,7 @@ import time
 import random
 
 # Variables globales
-vida = 100
+vidas = 100
 fortuna = 0
 ejercito = 0
 murallas = 0
