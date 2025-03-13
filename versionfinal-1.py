@@ -95,7 +95,7 @@ def batalla(jugador_vida=300, enemigo_vida=80):
 vida = 100
 fortuna = 0
 ejercito = 0
-murallas = 0
+muralla = 0
 
 def print_pause(message):
     print(message)
