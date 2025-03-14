@@ -10,77 +10,107 @@ murallas = 0
 def print_pause(message):
     print(message)
     time.sleep(1.5)
+import time
+import random
+
+# Variables globales
+vidas = 100
+fortuna = 0
+ejercito = 0
+murallas = 0
+decidió_bayas = False  # Variable para controlar si ya se eligieron las bayas
+decidió_comerciantes_mayas = False  # Variable para controlar si ya se pasó por los comerciantes mayas
+
+def print_pause(message):
+    print(message)
+    time.sleep(1.5)
 
 def mostrar_estado():
     print_pause(f"\n--- Estado actual ---")
-    print_pause(f"Vida: {vida}")
+    print_pause(f"Vida: {vidas}")
     print_pause(f"Fortuna: {fortuna}")
     print_pause(f"Ejército: {ejercito}")
     print_pause(f"Murallas: {murallas}")
     print_pause("---------------------")
 
 def intro():
-    global vida
+    global vidas
     print_pause("Bienvenido a 'El Ascenso del Guerrero'.")
     print_pause("Tu historia comienza en Cusco, donde tú y tus compañeros estáis esclavizados.")
     print_pause("Lográis escapar y llegáis a la ciudad portuaria de Cajamarca.")
     print_pause("Sin embargo, vuestra libertad es efímera y pronto os encontráis semi-esclavizados en Chan Chan.")
     print_pause("Decidís huir hacia la periferia, una tierra lejos del Imperio Inca.")
     print_pause("En esta tierra, debéis subsistir a base de bayas tropicales.")
+    print_pause("Ves una señal con tres colores: el rojo, intocado, el azul dañado, y el negro cubierto en sangre.")
     elegir_bayas()
 
 def elegir_bayas():
-    global vida
-    print_pause("\nEncuentras tres tipos de bayas:")
-    print_pause("1. Bayas rojas: Sabrosas y nutritivas.")
-    print_pause("2. Bayas azules: Peligrosas, pero puedes buscar un remedio.")
-    print_pause("3. Bayas negras: Mortales.")
-    decision = input("¿Qué bayas eliges? (1/2/3): ")
-    if decision == '1':
-        print_pause("Las bayas rojas te alimentan y recuperas 20 puntos de vida.")
-        vida += 20
-    elif decision == '2':
-        print_pause("Las bayas azules te enferman. Debes buscar una hoja de coca como remedio.")
-        print_pause("Encuentras tres plantas, pero solo una es la correcta.")
-        planta = input("¿Cuál eliges? (1: Planta verde / 2: Planta roja / 3: Planta amarilla): ")
-        if planta == '1':
-            print_pause("¡Correcto! Encuentras la hoja de coca y te curas.")
-            vida += 10
-        else:
-            print_pause("Esa no es la hoja de coca. Te enfermas más y pierdes 30 puntos de vida.")
-            vida -= 30
-    else:
-        print_pause("Las bayas negras son mortales. Pierdes toda tu vida.")
-        vida = 0
-    mostrar_estado()
-    if vida <= 0:
+    global vidas, decidió_bayas
+    if not decidió_bayas:  # Solo preguntar si no se ha decidido antes
+        print_pause("\nEncuentras tres tipos de bayas:")
+        print_pause("1. Bayas rojas: Sabrosas y nutritivas.")
+        print_pause("2. Bayas azules: Peligrosas, pero puedes buscar un remedio.")
+        print_pause("3. Bayas negras: Mortales.")
+
+        while True:
+            decision = input("¿Qué bayas eliges? (1/2/3): ")
+            if decision == '1':
+                print_pause("Las bayas rojas te alimentan y recuperas 20 puntos de vida.")
+                vidas += 20
+                break
+            elif decision == '2':
+                print_pause("Las bayas azules te enferman. Debes buscar una hoja de coca como remedio.")
+                planta = input("Encuentras tres plantas, pero solo una es la correcta. ¿Cuál eliges? (1: Planta verde / 2: Planta roja / 3: Planta amarilla): ")
+                if planta == '1':
+                    print_pause("¡Correcto! Encuentras la hoja de coca y te curas.")
+                    vidas += 10
+                else:
+                    print_pause("Esa no es la hoja de coca. Te enfermas más y pierdes 30 puntos de vida.")
+                    vidas -= 30
+                break
+            elif decision == '3':
+                print_pause("Las bayas negras son mortales. Pierdes toda tu vida.")
+                vidas = 0
+                break
+            else:
+                print_pause("Opción no válida. Por favor, elige 1, 2 o 3.")
+        
+        decidió_bayas = True  # Marcar que se ha tomado la decisión de las bayas
+        mostrar_estado()
+    
+    if vidas <= 0:
         print_pause("Has muerto por comer bayas venenosas.")
         return False
-    return True
+    else:
+        return True
 
 def comerciantes_mayas():
-    global vida
-    print_pause("\nUnos comerciantes mayas os reclutan y os llevan al Amazonas colombiano.")
-    print_pause("Os trasladan a Brisbris (actual San José de Costa Rica) para ser sacrificados en un cenote.")
-    print_pause("Debes convencer a los mayas de que no eres digno de ser sacrificado.")
-    decision = input("¿Qué haces? (1: Persuadirlos / 2: Esperar misericordia / 3: Escapar): ")
-    if decision == '1':
-        print_pause("Les cuentas que en Perú tienes fortuna y que si te sacrifican, morirán.")
-        print_pause("Los mayas te creen y te liberan sin daño.")
-    elif decision == '2':
-        print_pause("Esperas misericordia, pero los mayas deciden sacrificarte.")
-        vida = 0
-    else:
-        print_pause("Intentas escapar, pero los mayas te capturan y te hieren.")
-        vida = vida // 2
-    mostrar_estado()
-    if vida <= 0:
-        print_pause("Has muerto en el cenote.")
-        return False
+    global vidas, decidió_comerciantes_mayas
+    if not decidió_comerciantes_mayas:  # Solo ejecutar si no se ha pasado por los comerciantes mayas
+        print_pause("\nUnos comerciantes mayas os reclutan y os llevan al Amazonas colombiano.")
+        print_pause("Os trasladan a Brisbris (actual San José de Costa Rica) para ser sacrificados en un cenote.")
+        print_pause("Debes convencer a los mayas de que no eres digno de ser sacrificado.")
+        decision = input("¿Qué haces? (1: Persuadirlos / 2: Esperar misericordia / 3: Escapar): ")
+        if decision == '1':
+            print_pause("Les cuentas que en Perú tienes fortuna y que si te sacrifican, morirán.")
+            print_pause("Los mayas te creen y te liberan sin daño.")
+        elif decision == '2':
+            print_pause("Esperas misericordia, pero los mayas deciden sacrificarte.")
+            vidas = 0
+        else:
+            print_pause("Intentas escapar, pero los mayas te capturan y te hieren.")
+            vidas = vidas // 2
+        mostrar_estado()
+        if vidas <= 0:
+            print_pause("Has muerto en el cenote.")
+            return False
+        decidió_comerciantes_mayas = True  # Marcar que se ha pasado por los comerciantes mayas
     return True
 
+# El resto de las funciones se mantienen igual...
+
 def ruta_comercial():
-    global fortuna, vida
+    global fortuna, vidas
     print_pause("\nDe vuelta en Perú, decides comerciar en la ruta comercial maya.")
     print_pause("Debes elegir qué comerciar:")
     print_pause("1. Cacao: Ganarás mucha fortuna.")
@@ -93,12 +123,12 @@ def ruta_comercial():
     elif decision == '2':
         print_pause("Engañas a los mayas con agua teñida de rojo. Ganas 50 puntos de fortuna, pero pierdes 30 de vida.")
         fortuna += 50
-        vida -= 30
+        vidas -= 30
     else:
         print_pause("No comercias y trabajas en malas condiciones. Pierdes 20 puntos de vida.")
-        vida -= 20
+        vidas -= 20
     mostrar_estado()
-    if vida <= 0:
+    if vidas <= 0:
         print_pause("Has muerto por las malas condiciones de trabajo.")
         return False
     return True
@@ -188,6 +218,7 @@ def juego():
             break
 
 juego()
+
 
 
 
