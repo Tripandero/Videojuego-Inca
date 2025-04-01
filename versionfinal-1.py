@@ -31,41 +31,62 @@ class Personaje:
         print(f"{self.nombre} - Vida: {self.vida}")
 
 # Función para mostrar las opciones del jugador
+def print_pause(message):
+    print(message)
+    time.sleep(1.5)
+
 def mostrar_opciones():
+    print("Se te hacerca un mataterio por el olor de las bayas")
+    print("Parece estar dispuesto a atacarle")
+    print("Si ganas podrias obtener un arma mejor")
     print("\n¿Qué deseas hacer?")
     print("1. Atacar")
     print("2. Escapar")
 
-# Función para mostrar las opciones de ataque
+    # Función para mostrar las opciones de ataque
 def mostrar_opciones_ataque():
     print("\n¿Qué tipo de ataque deseas realizar?")
     print("1. Ataque Básico (10 de daño)")
-    print("2. Ataque Especial (50 de daño)")
+
+
+def mostrar_estado():
+    print_pause(f"\n--- Estado actual ---")
+    print_pause(f"Vida: {vida}")
+    print_pause(f"Fortuna: {fortuna}")
+    print_pause(f"Ejército: {ejercito}")
+    print_pause(f"Murallas: {murallas}")
+    print_pause("---------------------")
 
 # Función para simular la batalla
 def batalla(jugador_vida=300, enemigo_vida=80):
     jugador = Personaje("Jugador", jugador_vida, 10)
     enemigo = Personaje("Enemigo", enemigo_vida, 20)
 
+
     while jugador.esta_vivo() and enemigo.esta_vivo():
         jugador.mostrar_estado()
         enemigo.mostrar_estado()
 
+
         # Mostrar opciones
         mostrar_opciones()
         opcion = input("Selecciona una opción (1 o 2): ")
+
 
         if opcion == "1":
             # Opción para atacar
             mostrar_opciones_ataque()
             tipo_ataque = input("Selecciona el tipo de ataque (básico o especial): ").lower()
 
+
             jugador.atacar(enemigo, tipo_ataque)
+
 
             # Comprobamos si el enemigo murió
             if not enemigo.esta_vivo():
                 print("\n¡Has derrotado al enemigo!")
                 break
+
 
         elif opcion == "2":
             # Opción para escapar
@@ -74,6 +95,7 @@ def batalla(jugador_vida=300, enemigo_vida=80):
         else:
             print("\nOpción no válida. Intenta de nuevo.")
 
+
         # El enemigo contraataca si sigue vivo
         if enemigo.esta_vivo():
             enemigo.atacar(jugador, "básico")  # El enemigo siempre ataca con un daño básico de 20
@@ -81,7 +103,9 @@ def batalla(jugador_vida=300, enemigo_vida=80):
                 print("\n¡El enemigo te ha derrotado!")
                 break
 
+
         time.sleep(1)  # Espera para simular la batalla
+
 
     print("\n¡Batalla terminada!")
     if jugador.esta_vivo():
@@ -91,23 +115,6 @@ def batalla(jugador_vida=300, enemigo_vida=80):
         print("\nLo siento, has perdido la batalla.")
         return False
 
-# Variables globales
-vida = 100
-fortuna = 0
-ejercito = 0
-muralla = 0
-
-def print_pause(message):
-    print(message)
-    time.sleep(1.5)
-
-def mostrar_estado():
-    print_pause(f"\n--- Estado actual ---")
-    print_pause(f"Vida: {vida}")
-    print_pause(f"Fortuna: {fortuna}")
-    print_pause(f"Ejército: {ejercito}")
-    print_pause(f"Murallas: {murallas}")
-    print_pause("---------------------")
 
 def intro():
     global vida
@@ -118,7 +125,7 @@ def intro():
     print_pause("Decidís huir hacia la periferia, una tierra lejos del Imperio Inca.")
     print_pause("En esta tierra, debéis subsistir a base de bayas tropicales.")
     print_pause("Encuentras una señal con tres colores, el rojo limpio, el azul sucio, y el negro cubierto en sangre.")
-    elegir_bayas()
+
 
 def elegir_bayas():
     global vida
@@ -148,6 +155,7 @@ def elegir_bayas():
         print_pause("Has muerto por comer bayas venenosas.")
         return False
     return True
+
 
 def comerciantes_mayas():
     global vida
