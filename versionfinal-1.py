@@ -140,8 +140,8 @@ def elegir_bayas():
     elif decision == '2':
         print_pause("Las bayas azules te enferman. Debes buscar una hoja de coca como remedio.")
         print_pause("Encuentras tres plantas, pero solo una es la correcta.")
-        planta = input("¿Cuál eliges? (1: Planta verde / 2: Planta roja / 3: Planta amarilla): ")
-        if planta == '1':
+        planta = input("¿Cuál eliges? (1: Planta negra / 2: Planta roja / 3: Planta azul): ")
+        if planta == '2':
             print_pause("¡Correcto! Encuentras la hoja de coca y te curas.")
             vida += 10
         else:
