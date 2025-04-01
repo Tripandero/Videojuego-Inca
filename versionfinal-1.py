@@ -117,6 +117,7 @@ def intro():
     print_pause("Sin embargo, vuestra libertad es efímera y pronto os encontráis semi-esclavizados en Chan Chan.")
     print_pause("Decidís huir hacia la periferia, una tierra lejos del Imperio Inca.")
     print_pause("En esta tierra, debéis subsistir a base de bayas tropicales.")
+    print_pause("Encuentras una señal con tres colores, el rojo limpio, el azul sucio, y el negro cubierto en sangre.")
     elegir_bayas()
 
 def elegir_bayas():
