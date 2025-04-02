@@ -61,55 +61,49 @@ def mostrar_estado():
 def batalla(jugador_vida=300, enemigo_vida=80):
     jugador = Personaje("Jugador", jugador_vida, 10)
     enemigo = Personaje("Enemigo", enemigo_vida, 20)
-
+    especial_usado = False  # Variable para rastrear si el ataque especial ya se usó
 
     while jugador.esta_vivo() and enemigo.esta_vivo():
         jugador.mostrar_estado()
         enemigo.mostrar_estado()
 
+        print("\n1. Ataque Básico (10 de daño)")
+        if not especial_usado:
+            print("2. Ataque Especial (50 de daño)")
+        else:
+            print("2. Escapar")
 
-        # Mostrar opciones
-        mostrar_opciones()
-        opcion = input("Selecciona una opción (1 o 2): ")
+        tipo_ataque = input("Selecciona una opción (1 o 2): ").strip()
 
-
-        if opcion == "1":
-            # Opción para atacar
-            mostrar_opciones_ataque()
-            tipo_ataque = input("Selecciona el tipo de ataque (básico o especial): ").lower()
-
-
-            jugador.atacar(enemigo, tipo_ataque)
-
-
-            # Comprobamos si el enemigo murió
-            if not enemigo.esta_vivo():
-                print("\n¡Has derrotado al enemigo!")
-                break
-
-
-        elif opcion == "2":
-            # Opción para escapar
+        if tipo_ataque == "1":
+            jugador.atacar(enemigo, "básico")
+        elif tipo_ataque == "2" and not especial_usado:
+            jugador.atacar(enemigo, "especial")
+            especial_usado = True  # Se marca como usado
+        elif tipo_ataque == "2" and especial_usado:
             print("\nHas decidido escapar de la batalla.")
             break
         else:
-            print("\nOpción no válida. Intenta de nuevo.")
+            print("Opción no válida. Se usará ataque básico por defecto.")
+            jugador.atacar(enemigo, "básico")
 
+        # Comprobamos si el enemigo murió
+        if not enemigo.esta_vivo():
+            print("\n¡Has derrotado al enemigo!")
+            break
 
         # El enemigo contraataca si sigue vivo
         if enemigo.esta_vivo():
-            enemigo.atacar(jugador, "básico")  # El enemigo siempre ataca con un daño básico de 20
+            enemigo.atacar(jugador, "básico")
             if not jugador.esta_vivo():
                 print("\n¡El enemigo te ha derrotado!")
                 break
 
-
-        time.sleep(1)  # Espera para simular la batalla
-
+        time.sleep(1)
 
     print("\n¡Batalla terminada!")
     if jugador.esta_vivo():
-        print("\nFelicitaciones, has ganado la batalla.")
+
         return True
     else:
         print("\nLo siento, has perdido la batalla.")
