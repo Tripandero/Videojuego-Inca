@@ -1,0 +1,399 @@
+import random
+import time
+
+class Personaje:
+    def __init__(self, nombre, significado, tipo, vida, ataque, velocidad, alcance, especial, armas):
+        self.nombre = nombre
+        self.significado = significado
+        self.tipo = tipo
+        self.vida_max = vida
+        self.vida = vida
+        self.ataque = ataque
+        self.velocidad = velocidad
+        self.alcance = alcance
+        self.especial = especial
+        self.armas = armas
+        self.arma_actual = armas[0]
+        self.especial_disponible = True
+        self.defensa_activada = False
+
+    def mostrar_info_detallada(self):
+        print(f"\n=== {self.nombre} ===")
+        print(f"Significado: {self.significado}")
+        print(f"Tipo: {self.tipo}")
+        print(f"Vida: {self.vida}/{self.vida_max}")
+        print(f"Ataque: {self.ataque}")
+        print(f"Velocidad: {self.velocidad}")
+        print(f"Alcance: {self.alcance}")
+        print(f"Habilidad especial: {self.especial}")
+        print(f"Arma actual: {self.arma_actual}")
+        print("\nArmas disponibles:")
+        for i, arma in enumerate(self.armas, 1):
+            print(f"{i}. {arma}")
+
+    def cambiar_arma(self):
+        print("\nArmas disponibles:")
+        for i, arma in enumerate(self.armas, 1):
+            print(f"{i}. {arma}")
+        try:
+            opcion = int(input("Elige un arma (número): ")) - 1
+            if 0 <= opcion < len(self.armas):
+                self.arma_actual = self.armas[opcion]
+                print(f"\n¡Has equipado {self.arma_actual}!")
+                return True
+            else:
+                print("Opción inválida. No cambias de arma.")
+                return False
+        except ValueError:
+            print("Entrada inválida. No cambias de arma.")
+            return False
+
+    def usar_especial(self, objetivo=None):
+        if not self.especial_disponible:
+            print("\n¡Habilidad especial no disponible!")
+            return False
+
+        self.especial_disponible = False
+        if self.nombre == "Aymara":
+            danio = 300
+            objetivo.vida -= danio
+            print(f"\n¡{self.nombre} usa Rompetierras y hace {danio} de daño a {objetivo.nombre}!")
+            print(f"¡{objetivo.nombre} queda paralizado por un turno!")
+            return "paralizado"
+        elif self.nombre == "Suhay":
+            danio = 50
+            objetivo.vida -= danio
+            print(f"\n¡{self.nombre} usa Maíz caliente y hace {danio} de daño a {objetivo.nombre}!")
+        elif self.nombre == "Wayna":
+            danio = 100
+            objetivo.vida -= danio
+            print(f"\n¡{self.nombre} usa Cuchilla Venenosa y hace {danio} de daño a {objetivo.nombre}!")
+            print(f"¡{objetivo.nombre} seguirá recibiendo daño por veneno!")
+            return "envenenado"
+        elif self.nombre == "Koka":
+            curacion = min(100, self.vida_max - self.vida)
+            self.vida += curacion
+            print(f"\n¡{self.nombre} usa Puré de coca y recupera {curacion} de vida!")
+        return None
+
+    def defender(self):
+        self.defensa_activada = True
+        print(f"\n¡{self.nombre} se prepara para defenderse!")
+        return True
+
+# Definimos los personajes disponibles
+personajes = {
+    "Aymara": Personaje(
+        nombre="Aymara",
+        significado="Significa ser fuerte y trabajador",
+        tipo="Tanque",
+        vida=500,
+        ataque=100,
+        velocidad=10,
+        alcance=10,
+        especial="Rompetierras: hace 300 de daño y deja paralizado al enemigo por un turno",
+        armas=["Puños (inicial)", "Tuccina", "Chaska", "Porra", "Sable"]
+    ),
+    "Suhay": Personaje(
+        nombre="Suhay",
+        significado="El que es tal como el maíz amarillo, abundante y fino. Roca y peña",
+        tipo="Alcance",
+        vida=150,
+        ataque=100,
+        velocidad=50,
+        alcance=100,
+        especial="Maíz caliente: causa 50 de daño a todos los enemigos",
+        armas=["Manos (inicial)", "Tirachinas", "Cerbatana", "Honda", "Arco y Flecha"]
+    ),
+    "Wayna": Personaje(
+        nombre="Wayna",
+        significado="Mozo, joven, buen amigo",
+        tipo="Ágil",
+        vida=120,
+        ataque=120,
+        velocidad=150,
+        alcance=30,
+        especial="Cuchilla Venenosa: causa 100 de daño cada turno a un enemigo",
+        armas=["Manos (inicial)", "Hoz Sicán", "Cunca", "Cimitarra", "Cuchillo de doble filo"]
+    ),
+    "Koka": Personaje(
+        nombre="Koka",
+        significado="Coca, planta sagrada",
+        tipo="Espadachina",
+        vida=200,
+        ataque=150,
+        velocidad=80,
+        alcance=50,
+        especial="Puré de coca: cura 100 de vida",
+        armas=["Palo largo (inicial)", "Jabalina", "Guja", "Antañauichi", "Alabardas"]
+    )
+}
+
+class NPC(Personaje):
+    def __init__(self, nombre, significado, tipo, vida, ataque, velocidad, alcance, especial, armas, personalidad):
+        super().__init__(nombre, significado, tipo, vida, ataque, velocidad, alcance, especial, armas)
+        self.personalidad = personalidad
+        self.frases = {
+            "agresivo": [
+                "¡Te aplastaré como a un insecto!",
+                "¡No tienes oportunidad contra mí!",
+                "¡Prepárate para sufrir!",
+                "¡Esta batalla terminará con tu derrota!"
+            ],
+            "defensivo": [
+                "¡No podrás pasarme!",
+                "¡Mi defensa es impenetrable!",
+                "¡Ataca si te atreves!",
+                "¡Protegeré mi posición!"
+            ],
+            "astuto": [
+                "¡Ja! ¿En serio crees que puedes ganar?",
+                "¡Mis movimientos son impredecibles!",
+                "¡Caerás en mi trampa!",
+                "¡La astucia vence a la fuerza bruta!"
+            ]
+        }
+    
+    def hablar(self):
+        frase = random.choice(self.frases[self.personalidad])
+        print(f"\n{self.nombre}: {frase}")
+    
+    def decidir_accion(self, jugador):
+        self.hablar()
+        time.sleep(1)
+        
+        # Inteligencia básica del NPC
+        if self.vida < self.vida_max * 0.3 and random.random() < 0.7:
+            # 70% de probabilidad de defenderse si tiene poca vida
+            return "defender"
+        elif self.especial_disponible and random.random() < 0.6:
+            # 60% de probabilidad de usar especial si está disponible
+            return "especial"
+        elif random.random() < 0.3:
+            # 30% de probabilidad de cambiar arma
+            return "cambiar_arma"
+        else:
+            # Ataque normal
+            return "atacar"
+
+def mostrar_personajes():
+    print("\n=== PERSONAJES DISPONIBLES ===")
+    for nombre, personaje in personajes.items():
+        personaje.mostrar_info_detallada()
+        print("\n" + "="*50 + "\n")
+
+def elegir_personaje():
+    mostrar_personajes()
+    print("\nElige tu personaje:")
+    for nombre in personajes.keys():
+        print(f"- {nombre}")
+    
+    while True:
+        eleccion = input("\n¿Qué personaje deseas jugar? ").capitalize()
+        if eleccion in personajes:
+            return personajes[eleccion]
+        else:
+            print("Personaje no válido. Por favor, elige uno de los listados.")
+
+def crear_enemigo():
+    enemigos = [
+        NPC(
+            nombre="Tupac",
+            significado="El rebelde",
+            tipo="Guerrero",
+            vida=250,
+            ataque=80,
+            velocidad=60,
+            alcance=40,
+            especial="Grito de guerra: aumenta su ataque en 50% por 2 turnos",
+            armas=["Garrote", "Hacha", "Maza"],
+            personalidad="agresivo"
+        ),
+        NPC(
+            nombre="Mama Ocllo",
+            significado="La sabia",
+            tipo="Hechicera",
+            vida=180,
+            ataque=60,
+            velocidad=70,
+            alcance=80,
+            especial="Barrera mágica: reduce el daño recibido en 75% por 1 turno",
+            armas=["Báculo", "Orbe", "Daga ceremonial"],
+            personalidad="defensivo"
+        ),
+        NPC(
+            nombre="Atahualpa",
+            significado="El estratega",
+            tipo="Táctico",
+            vida=220,
+            ataque=70,
+            velocidad=90,
+            alcance=60,
+            especial="Trampa dorada: reduce la velocidad del enemigo a la mitad por 2 turnos",
+            armas=["Lanza", "Espada curva", "Honda especial"],
+            personalidad="astuto"
+        )
+    ]
+    return random.choice(enemigos)
+
+def aplicar_efectos(jugador, enemigo, efectos):
+    nuevos_efectos = {}
+    
+    for personaje, efecto in efectos.items():
+        if efecto == "paralizado":
+            print(f"\n¡{personaje.nombre} está paralizado y no puede moverse!")
+            nuevos_efectos[personaje] = None
+        elif efecto == "envenenado":
+            danio = 30
+            personaje.vida -= danio
+            print(f"\n¡{personaje.nombre} sufre {danio} de daño por veneno!")
+            if random.random() < 0.5:  # 50% de chance de que continúe
+                nuevos_efectos[personaje] = "envenenado"
+    
+    return nuevos_efectos
+
+def batalla(jugador, enemigo):
+    print(f"\n¡Un {enemigo.tipo.lower()} llamado {enemigo.nombre} aparece frente a ti!")
+    print(f"{enemigo.nombre}: \"{random.choice(enemigo.frases[enemigo.personalidad])}\"")
+    
+    turno = 0
+    efectos = {}
+    
+    while jugador.vida > 0 and enemigo.vida > 0:
+        turno += 1
+        print(f"\n=== Turno {turno} ===")
+        print(f"{jugador.nombre}: {jugador.vida}/{jugador.vida_max} HP | {enemigo.nombre}: {enemigo.vida}/{enemigo.vida_max} HP")
+        
+        # Turno del jugador
+        print("\n¿Qué deseas hacer?")
+        print("1. Atacar")
+        print("2. Usar habilidad especial")
+        print("3. Cambiar arma")
+        print("4. Defender")
+        print("5. Ver información del enemigo")
+        
+        accion_valida = False
+        while not accion_valida:
+            opcion = input("Selecciona una opción (1-5): ")
+            
+            if opcion == "1":
+                danio = jugador.ataque
+                if enemigo.defensa_activada:
+                    danio = max(5, danio // 2)
+                    print(f"\n¡{enemigo.nombre} se defiende y reduce el daño!")
+                enemigo.vida -= danio
+                print(f"\n¡{jugador.nombre} ataca con {jugador.arma_actual} y hace {danio} de daño a {enemigo.nombre}!")
+                accion_valida = True
+            elif opcion == "2":
+                efecto = jugador.usar_especial(enemigo)
+                if efecto:
+                    efectos[enemigo] = efecto
+                accion_valida = True
+            elif opcion == "3":
+                if jugador.cambiar_arma():
+                    accion_valida = True
+            elif opcion == "4":
+                jugador.defender()
+                accion_valida = True
+            elif opcion == "5":
+                enemigo.mostrar_info_detallada()
+            else:
+                print("Opción no válida. Intenta de nuevo.")
+        
+        # Verificar si el enemigo fue derrotado
+        if enemigo.vida <= 0:
+            break
+        
+        # Aplicar efectos de estado
+        efectos = aplicar_efectos(jugador, enemigo, efectos)
+        
+        # Verificar si el enemigo fue derrotado por efectos
+        if enemigo.vida <= 0:
+            break
+        
+        # Turno del enemigo
+        time.sleep(1.5)
+        accion = enemigo.decidir_accion(jugador)
+        
+        if accion == "atacar":
+            danio = enemigo.ataque
+            if jugador.defensa_activada:
+                danio = max(5, danio // 2)
+                print(f"\n¡Te defiendes y reduces el daño recibido!")
+            jugador.vida -= danio
+            print(f"\n¡{enemigo.nombre} ataca con {enemigo.arma_actual} y te hace {danio} de daño!")
+        elif accion == "especial":
+            efecto = enemigo.usar_especial(jugador)
+            if efecto:
+                efectos[jugador] = efecto
+        elif accion == "defender":
+            enemigo.defender()
+        elif accion == "cambiar_arma":
+            enemigo.arma_actual = random.choice(enemigo.armas)
+            print(f"\n¡{enemigo.nombre} cambia a {enemigo.arma_actual}!")
+        
+        # Aplicar efectos de estado
+        efectos = aplicar_efectos(jugador, enemigo, efectos)
+        
+        # Resetear defensas
+        jugador.defensa_activada = False
+        enemigo.defensa_activada = False
+        
+        # Pequeña pausa entre turnos
+        time.sleep(1.5)
+    
+    if jugador.vida > 0:
+        print(f"\n¡Has derrotado a {enemigo.nombre}!")
+        return True
+    else:
+        print(f"\n¡{enemigo.nombre} te ha derrotado!")
+        return False
+
+def juego():
+    print("\n=== EL ASCENSO DEL GUERRERO ===")
+    print("Un juego de estrategia y habilidad en el mundo andino\n")
+    
+    jugador = elegir_personaje()
+    print(f"\n¡Has elegido a {jugador.nombre}, {jugador.significado.lower()}!")
+    
+    # Sistema de batallas consecutivas
+    victorias = 0
+    while jugador.vida > 0:
+        enemigo = crear_enemigo()
+        print(f"\n¡Prepárate para la batalla {victorias + 1}!")
+        
+        if not batalla(jugador, enemigo):
+            break
+        
+        victorias += 1
+        # Recuperar algo de vida después de cada batalla
+        recuperacion = min(50, jugador.vida_max - jugador.vida)
+        jugador.vida += recuperacion
+        jugador.especial_disponible = True
+        print(f"\n¡Descansas y recuperas {recuperacion} de vida!")
+        
+        if victorias % 2 == 0:
+            # Cada 2 victorias, mejorar stats
+            mejora = random.choice(["ataque", "vida", "velocidad"])
+            if mejora == "ataque":
+                jugador.ataque += 10
+                print("\n¡Tu ataque ha aumentado en 10 puntos!")
+            elif mejora == "vida":
+                jugador.vida_max += 30
+                jugador.vida += 30
+                print("\n¡Tu vida máxima ha aumentado en 30 puntos!")
+            else:
+                jugador.velocidad += 15
+                print("\n¡Tu velocidad ha aumentado en 15 puntos!")
+    
+    print(f"\n=== FIN DEL JUEGO ===")
+    print(f"Lograste {victorias} victorias consecutivas!")
+    if victorias >= 5:
+        print("¡Eres un verdadero guerrero andino!")
+    elif victorias >= 3:
+        print("¡Buen desempeño en el campo de batalla!")
+    else:
+        print("¡Sigue practicando para mejorar!")
+
+if __name__ == "__main__":
+    juego()
