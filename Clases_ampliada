@@ -181,18 +181,24 @@ class EventoAgricultura:
         print("1. Maíz")
         print("2. Patatas")
         print("3. Tomate")
-        decision = input("¿Qué eliges? (1/2/3): ")
         
-        if decision == '1':
-            self.estado.fortuna += 200
-            print("Plantas maíz y te haces noble rápidamente. Ganas 200 puntos de fortuna.")
-        elif decision == '2':
-            print("Plantas patatas. Te haces noble lentamente, pero cuando quieres cortejar a la hija del Inca, ya tiene marido.")
-            print("Pierdes la oportunidad de ascender más.")
+        try:
+            decision = input("¿Qué eliges? (1/2/3): ")
+            if decision == '1':
+                self.estado.fortuna += 200
+                print("Plantas maíz y te haces noble rápidamente. Ganas 200 puntos de fortuna.")
+            elif decision == '2':
+                print("Plantas patatas. Te haces noble lentamente, pero cuando quieres cortejar a la hija del Inca, ya tiene marido.")
+                print("Pierdes la oportunidad de ascender más.")
+                return False
+            elif decision == '3':
+                self.estado.fortuna = 0
+                print("Plantas tomate y te arruinas. Pierdes toda tu fortuna.")
+            else:
+                raise ValueError("Opción no válida.")
+        except Exception as e:
+            print(f"Ocurrió un error: {e}")
             return False
-        else:
-            self.estado.fortuna = 0
-            print("Plantas tomate y te arruinas. Pierdes toda tu fortuna.")
         
         self.estado.mostrar_estado()
         return True
