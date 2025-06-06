@@ -423,7 +423,7 @@ class ModoBatalla:
                 velocidad=10,
                 alcance=10,
                 especial="Rompetierras: hace 300 de daño y deja paralizado al enemigo por un turno",
-                armas=["Puños (inicial)", "Tuccina", "Chaska", "Porra", "Sable"]
+                armas=["Puños (inicial)", "Tuccina", "Chaska", "Porra", "Sable", "Espada de dos manos"]
             ),
             "Suhay": PersonajeBatalla(
                 nombre="Suhay",
@@ -434,7 +434,7 @@ class ModoBatalla:
                 velocidad=50,
                 alcance=100,
                 especial="Maíz caliente: causa 50 de daño a todos los enemigos",
-                armas=["Manos (inicial)", "Tirachinas", "Cerbatana", "Honda", "Arco y Flecha"]
+                armas=["Manos (inicial)", "Tirachinas", "Cerbatana", "Honda", "Arco y Flecha", "Ballesta"]
             ),
             "Wayna": PersonajeBatalla(
                 nombre="Wayna",
@@ -445,7 +445,7 @@ class ModoBatalla:
                 velocidad=150,
                 alcance=30,
                 especial="Cuchilla Venenosa: causa 100 de daño cada turno a un enemigo",
-                armas=["Manos (inicial)", "Hoz Sicán", "Cunca", "Cimitarra", "Cuchillo de doble filo"]
+                armas=["Manos (inicial)", "Hoz Sicán", "Cunca", "Cimitarra", "Cuchillo de doble filo", "Daga"]
             ),
             "Koka": PersonajeBatalla(
                 nombre="Koka",
@@ -456,7 +456,7 @@ class ModoBatalla:
                 velocidad=80,
                 alcance=50,
                 especial="Puré de coca: cura 100 de vida",
-                armas=["Palo largo (inicial)", "Jabalina", "Guja", "Antañauichi", "Alabardas"]
+                armas=["Palo largo (inicial)", "Jabalina", "Guja", "Antañauichi", "Alabardas", "Pica"]
             )
         }
     
